@@ -14,23 +14,23 @@ def ad(arr, i, j):
 
 ###############################################################################
 
-# def det4 (arr):
-#     res = []
-#     for i in range(4):
-#         res.append(arr[i][0] * det3(ad(arr, i, 0), i))
-#     return sum(res)
+def det4 (arr):
+    res = []
+    for i in range(4):
+        res.append(arr[i][0] * det3(ad(arr, i, 0), i))
+    return sum(res)
 
-# def det3 (arr, idx):
-#     res = []
-#     for i in range(3):
-#         res.append(arr[i][0] * det2(ad(arr, i, 0), i))
-#     return pow(-1, idx + 2) * sum(res)
+def det3 (arr, idx):
+    res = []
+    for i in range(3):
+        res.append(arr[i][0] * det2(ad(arr, i, 0), i))
+    return pow(-1, idx + 2) * sum(res)
 
-# def det2 (arr, idx):
-#     res = arr[0, 0] * arr[1, 1] - arr[1, 0] * arr[0, 1]
-#     return pow(-1, idx + 2) * res
+def det2 (arr, idx):
+    res = arr[0, 0] * arr[1, 1] - arr[1, 0] * arr[0, 1]
+    return pow(-1, idx + 2) * res
 
-# ###############################################################################
+###############################################################################
 
 def det4p (arr):
     res4 = Manager().list()
@@ -80,103 +80,22 @@ def mult(res, el1, el2, idx):
     
 ###############################################################################
 
-# def calc_det4o(arr):
-#     procs = []
-#     det3s = calc_det3o(arr)
-#     print(det3s)
-
-#     res = Manager().dict()
-#     args = [(m, k, i, j) for m in range(4) for k in range(4) for i in range(3) for j in range(i + 1, 4) if (k != m)&(i != k)&(j != k)&(i != m)&(j != m)]
-
-#     def det (m, k, i, j):
-#         res[(m, k, i, j)] = (-1) ** (m) * arr[m][0] * det3s[(k, i, j)]
-  
-#     for i in range(12):
-#         proc = Process(target=det, args=args[i])
-#         proc.start()
-#         procs.append(proc)
-
-#     for proc in procs:
-#         proc.join() 
-
-#     return res  
-
-# def calc_det3o(arr):
-#     procs = []
-#     det2s = calc_det2o(arr)
-
-#     res = Manager().dict()
-#     args = [(k, i, j) for k in range(4) for i in range(3) for j in range(i + 1, 4) if (i != k)&(j != k)]
-
-#     def det (k, i, j):
-#         res[(k, i, j)] = (-1) ** (k) * arr[k][1] * det2s[(i, j)]
-  
-#     for i in range(12):
-#         proc = Process(target=det, args=args[i])
-#         proc.start()
-#         procs.append(proc)
-
-#     for proc in procs:
-#         proc.join() 
-
-#     return res     
-
-# def calc_det2o(arr):
-#     procs = []
-#     mults = calc_mults(arr)
-
-#     res = Manager().dict()
-#     args = [(i, j) for i in range(3) for j in range(i + 1, 4)]
-
-#     def det (i, j):
-#         res[(i, j)] = mults[(i, j)] + mults[(j, i)]
-  
-#     for i in range(6):
-#         proc = Process(target=det, args=args[i])
-#         proc.start()
-#         procs.append(proc)
-
-#     for proc in procs:
-#         proc.join() 
-
-#     return res     
-
-
-# def calc_mults(arr):
-#     procs = []
-#     res = Manager().dict()
-#     args = [(i, j) for i in range(4) for j in range(4) if i != j]
-
-#     def mulo (i, j):
-#         res[(i, j)] = (-1) ** (int(i > j)) * arr[i][2] * arr[j][3]    
-
-#     for i in range(12):
-#         proc = Process(target=mulo, args=args[i])
-#         proc.start()
-#         procs.append(proc)
-
-#     for proc in procs:
-#         proc.join()
-
-#     return res
-
-###############################################################################
-
 def inv_count (m, k, i, j):
-    count = 0
-    if k < m : count += 1
-    if i < k : count += 1
-    if i < m : count += 1
-    if j < i : count += 1
-    if j < k : count += 1
-    if j < m : count += 1
-    return count
+    return sum(((m > k), (m > i), (m > j), (k > i), (k > j), (i > j)))
+
+# def inv_cnt (ind):
+#     cnt = 0
+#     for i in range(len(ind) - 1):
+#         for j in range(i, len(ind)):
+#             cnt += (ind[i] > ind[j])
+#     return cnt
 
 ###############################################################################
 
 def determ4 (arr):
     res = []
-    args = [(m, k, i, j) for m in range(4) for k in range(4) for i in range(4) for j in range(4) if (k != m)&(i != k)&(j != k)&(i != m)&(j != m)&(i != j)]
+    args = [(m, k, i, j) for m in range(4) for k in range(4) for i in range(4) for j in range(4) 
+            if (k != m)&(i != k)&(j != k)&(i != m)&(j != m)&(i != j)]
 
     def mult(m, k, i, j):
         return arr[m][0] * arr[k][1] * arr[i][2] * arr[j][3] * (-1) ** (inv_count (m, k, i, j))
@@ -191,7 +110,8 @@ def determ4 (arr):
 def determ4p (arr):
     procs = []
     res = Manager().list()
-    args = [(m, k, i, j) for m in range(4) for k in range(4) for i in range(4) for j in range(4) if (k != m)&(i != k)&(j != k)&(i != m)&(j != m)&(i != j)]
+    args = [(m, k, i, j) for m in range(4) for k in range(4) for i in range(4) for j in range(4) 
+            if (k != m)&(i != k)&(j != k)&(i != m)&(j != m)&(i != j)]
 
     def mult(m, k, i, j):
         res.append(arr[m][0] * arr[k][1] * arr[i][2] * arr[j][3] * (-1) ** (inv_count (m, k, i, j)))
@@ -208,33 +128,26 @@ def determ4p (arr):
 
 ###############################################################################
 
+def calc_time(func):
+    time_start = datetime.now()
+    det = func(arr)
+    time_calc = datetime.now() - time_start
+    return "result: {}\ttime: {}".format(det, time_calc)
+
 if __name__ == '__main__':
 
     arr = np.array([[1, 2, 3, 4],
                     [5, 7, 9, 11],
                     [9, 3, 9, 8],
                     [7, 8, 5, 4]])
-
     # det = 12
 
+    # np.random.seed(42)
+    # arr = np.random.randint(-10, 10, (4, 4))
     # printarr(arr)
 
-    # time_start = datetime.now()
-    # det = det4(arr)
-    # time_calc = datetime.now() - time_start
-    # print(det)
-    # print(time_calc)
-
-    time_start = datetime.now()
-    det = determ4p(arr)
-    time_calc = datetime.now() - time_start
-    print(det)
-    print(time_calc)
-
-    # time_start = datetime.now()
-    # det = np.linalg.det(arr)
-    # time_calc = datetime.now() - time_start
-    # print(det)
-    # print(time_calc)
-
-    # print(inv_count(1, 2, 3))
+    print("Крамер последовательно\n{}".format(calc_time(det4)))
+    print("Крамер параллельно\n{}".format(calc_time(det4p)))
+    print("Перебор последовательно\n{}".format(calc_time(determ4)))
+    print("Перебор параллельно\n{}".format(calc_time(determ4p)))
+    print("Встроенная функция\n{}".format(calc_time(np.linalg.det)))
